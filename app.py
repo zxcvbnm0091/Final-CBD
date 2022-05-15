@@ -1,8 +1,6 @@
-from flask import Flask, request, render_template, session, flash, redirect, url_for, jsonify
+from flask import Flask, request, render_template, session, flash, redirect, url_for
 import re
 import psycopg2.extras
-from werkzeug.security import generate_password_hash, check_password_hash
-
 
 from db import db_connection
 
@@ -13,8 +11,9 @@ def match(text):
     return(True)
 
 app = Flask(__name__)
-app.secret_key = 'THISISMYSECRETKEY'  # create the unique one for yourself
+app.secret_key = 'THISISMYSECRETKEY'
 
+# Home Page
 @app.route('/')
 def home():
     if session:
@@ -22,6 +21,7 @@ def home():
         cur = conn.cursor()
         user_id = session['user_id']
         print(user_id)
+        # Notes
         sql = """
             SELECT id, title, content, user_id, datetime
             FROM notes
@@ -32,6 +32,7 @@ def home():
         notes = cur.fetchall()
         print(notes)
 
+        # Todo List
         sql2 = """
             SELECT tdl.id, tdl.todo, tdl.user_id
             FROM todolist tdl
@@ -47,7 +48,7 @@ def home():
 
     return render_template('login.html')
 
-
+# Login Page
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     """ function to show and process login page """
@@ -81,12 +82,14 @@ def login():
 
     return render_template('login.html')
 
+# Logout Function
 @app.route('/logout')
 def logout():
     """ function to do logout """
     session.clear()  
     return render_template('login.html')
 
+# SignUp Page
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     conn = db_connection()
@@ -147,37 +150,27 @@ def newnotes():
         
     return render_template('newnotes.html')
 
-@app.route('/delete/<int:notes_id>', methods=['GET', 'POST'])
-def delete(notes_id):
-    # check if user is logged in
-    if not session:
-        return redirect(url_for('login'))
-
+# Notes
+# View Notes Page
+@app.route('/viewnote/<int:notes_id>', methods=['GET', 'POST'])
+def viewnotes(notes_id):
     conn = db_connection()
-    cur = conn.cursor()
-    sql = 'DELETE FROM notes WHERE id = %s' % notes_id
+    cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+    sql = """
+    SELECT id, title, content, user_id, datetime
+    FROM notes
+    WHERE id = %s
+    """ % notes_id
+
     cur.execute(sql)
+    note = cur.fetchone()
     cur.close()
-    conn.commit()
     conn.close()
-    return redirect (url_for('home'))
 
-@app.route('/deletetodo/<int:todo_id>', methods=['GET', 'POST'])
-def deletetodo(todo_id):
-    # check if user is logged in
-    if not session:
-        return redirect(url_for('login'))
+    return render_template('viewnotes.html', note=note)
 
-    conn = db_connection()
-    cur = conn.cursor()
-    sql = """ DELETE FROM todolist WHERE id = %s""" % todo_id
-    cur.execute(sql)
-    print(sql)
-    cur.close()
-    conn.commit()
-    conn.close()
-    return redirect (url_for('home'))
-
+#Edit Notes Page
 @app.route('/editnote/<int:notes_id>', methods=['GET', 'POST'])
 def editnotes(notes_id):
     conn = db_connection()
@@ -214,20 +207,36 @@ def editnotes(notes_id):
 
     return render_template('editnotes.html', note=note)
 
-@app.route('/viewnote/<int:notes_id>', methods=['GET', 'POST'])
-def viewnotes(notes_id):
+# Delete notes function
+@app.route('/delete/<int:notes_id>', methods=['GET', 'POST'])
+def delete(notes_id):
+    # check if user is logged in
+    if not session:
+        return redirect(url_for('login'))
+
     conn = db_connection()
-    cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-
-    sql = """
-    SELECT id, title, content, user_id, datetime
-    FROM notes
-    WHERE id = %s
-    """ % notes_id
-
+    cur = conn.cursor()
+    sql = 'DELETE FROM notes WHERE id = %s' % notes_id
     cur.execute(sql)
-    note = cur.fetchone()
     cur.close()
+    conn.commit()
     conn.close()
+    return redirect (url_for('home'))
 
-    return render_template('viewnotes.html', note=note)
+# Todo List
+# Delete Todo list function
+@app.route('/deletetodo/<int:todo_id>', methods=['GET', 'POST'])
+def deletetodo(todo_id):
+    # check if user is logged in
+    if not session:
+        return redirect(url_for('login'))
+
+    conn = db_connection()
+    cur = conn.cursor()
+    sql = """ DELETE FROM todolist WHERE id = %s""" % todo_id
+    cur.execute(sql)
+    print(sql)
+    cur.close()
+    conn.commit()
+    conn.close()
+    return redirect (url_for('home'))
