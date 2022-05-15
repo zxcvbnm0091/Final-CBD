@@ -1,0 +1,50 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito&display=swap');
+*{
+    margin: 0;
+    padding: 0;
+    font-family: 'Nunito', sans-serif;
+}
+
+:root{
+    /* ===== Colors ===== */
+    --body-color: #E4E9F7;
+    --navbar-color: #FFF;
+    --primary-color: #FC7306;
+
+}
+
+nav{
+    background-color: var(--navbar-color);
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+nav .navbar-brand{
+    margin-left: 20px;
+    font-family: 'Nunito', sans-serif;
+    font-weight: bold;
+    font-size: 34px;
+    color: var(--primary-color);
+}
+nav form{
+    margin-right: 20px;
+}
+nav .dropdown a, nav li .login, nav li .signup{
+    font-family: 'Nunito' sans-serif;
+    font-size: 20px;
+    font-weight: bold;
+    color: var(--primary-color);
+    text-decoration: none;
+}
+nav .dropdown a:hover, nav li .login:hover, nav li .signup:hover{
+    color: var(--primary-color);
+    text-decoration: underline;
+}
+main{
+    background-color: var(--body-color);
+    padding: 50px 50px;
+    min-height: 520px;
+    align-items: center;
+    justify-content: center;
+}
+footer{
+    background-color: var(--primary-color);
+}

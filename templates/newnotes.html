@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block css %}
+<link rel="stylesheet" href="{{url_for('static', filename='newnotes.css')}}">
+{% endblock %}
+
+{% block title %}
+New Notes
+{% endblock %}
+
+{% block content %}
+<div class="note-form">
+    <form action="{{ url_for('newnotes') }}" method="POST">
+        <div class="row wrapper">
+            <input type="text" class="input-note" placeholder="Title" id="title" name="title" style="border: none;" required>
+        </div>
+        <div class="row wrapper">
+            <textarea name="content" class="input-note" id="content" cols="30" rows="10" placeholder="Write your note here..." required></textarea> 
+        </div>
+        <div class="row">
+            <input type="submit" class="btn-add" value="Add">
+        </div>
+    </form>
+</div>
+{% endblock %}

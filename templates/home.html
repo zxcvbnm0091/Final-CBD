@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+
+{% block css %}
+<link rel="stylesheet" href="{{url_for('static', filename='home.css')}}">
+{% endblock %}
+
+{% block title %}
+Home
+{% endblock %}
+
+{% block content %}
+
+<div class="note">
+  <div class="row note-header">
+    <div class="col note-title h2" id="note">
+      Notes
+    </div>
+    <div class="col note-add">
+      <a href="{{ url_for('newnotes') }}" class="btn btn-primary" style="text-decoration: none; float: right;">New</a>
+    </div>
+    <div class="row note-content">
+      {% if notes and session %}
+      <table class="table">
+        <thead>
+          <tr>
+            <th class="col-2" scope="col-2">Tanggal</th>
+            <th class="col-7" scope="col-8">Catatan</th>
+            <th class="col-3" scope="col-2">#</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for (notes_id, title, content, user_id, datetime) in notes %}
+          <tr>
+            <td>{{ datetime }}</td>
+            <td class="note_title"><a href="{{ url_for('viewnotes', notes_id = notes_id)}}">{{ title }}</a></td>
+            <td>
+              <a href="{{ url_for('editnotes', notes_id = notes_id)}}" class="btn btn-success" style="text-decoration: none;">Edit</a>
+              <a href="{{ url_for('delete', notes_id = notes_id)}}" class="btn btn-danger" style="text-decoration: none;">Delete</a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <h4>No Notes Found</h4>
+      {% endif%}
+    </div>
+  </div>
+</div>
+
+
+<div class="todo">
+  <div class="row todo-header">
+    <div class="col todo-title h2" id="noteboard">
+      To Do List
+    </div>
+    <div class="col todo-add">
+      <a href="#" class="btn btn-primary" style="text-decoration: none; float: right;">New</a>
+    </div>
+  </div>
+  {% if todo and session %}
+  <form action="">
+    <div class="todo-list">
+      {% for (todo_id, list, user_id) in todo %}
+        <label class="todo-list_label">
+            <input type="checkbox" name="" id="">
+            <i class="check"></i>
+            <span>{{ list }}</span>
+            <a href="{{ url_for('deletetodo', todo_id = todo_id)}}" style="position: absolute; right: 300px;">Delete</a>
+        </label>
+      {% endfor %}
+    </div>
+  </form>
+  {% else %}
+    <h4>No Notes Found</h4>
+  {% endif %}
+</div>
+
+<style>
+main .note table .note_title{
+    color: black;
+    text-decoration: none
+}
+main .note table .note_title:hover{
+    text-decoration: underline
+}
+</style>
+
+
+
+{% endblock %}
