@@ -30,7 +30,7 @@ nav form{
 nav .dropdown a, nav li .login, nav li .signup{
     font-family: 'Nunito' sans-serif;
     font-size: 20px;
-    font-weight: bold;
+    font-weight: bolder;
     color: var(--primary-color);
     text-decoration: none;
 }

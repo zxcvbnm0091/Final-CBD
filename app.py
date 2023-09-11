@@ -224,6 +224,27 @@ def delete(notes_id):
     return redirect (url_for('home'))
 
 # Todo List
+# New Todo List Page
+@app.route('/newtodolist', methods=['GET', 'POST'])
+def newtodolist():
+    conn = db_connection()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    if request.method == 'POST' and 'todolist' in request.form:
+        todolist = request.form['todolist']
+        user_id = session['user_id']
+        
+        sql = """
+            INSERT INTO todolist (user_id, todo) 
+            VALUES (%s, '%s') 
+            """ % (user_id, todolist)
+        cur.execute(sql)
+        conn.commit()
+        print(sql)
+        cur.close()
+        conn.close()
+        return redirect(url_for('home')) 
+        
+    return render_template('newtodo.html')
 # Delete Todo list function
 @app.route('/deletetodo/<int:todo_id>', methods=['GET', 'POST'])
 def deletetodo(todo_id):

@@ -1,0 +1,22 @@
+{% extends 'base.html' %} {% block css %}
+<link rel="stylesheet" href="{{url_for('static', filename='newnotes.css')}}" />
+{% endblock %} {% block title %} ToDo List {% endblock %} {% block content %}
+<div class="note-form">
+  <form action="{{ url_for('newtodolist') }}" method="POST">
+    <div class="row wrapper">
+      <input
+        type="text"
+        class="input-note"
+        placeholder="Todo List"
+        id="todolist"
+        name="todolist"
+        style="border: none"
+        required
+      />
+    </div>
+    <div class="row">
+      <input type="submit" class="btn-add" value="Add" />
+    </div>
+  </form>
+</div>
+{% endblock %}

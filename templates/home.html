@@ -55,7 +55,7 @@ Home
       To Do List
     </div>
     <div class="col todo-add">
-      <a href="#" class="btn btn-primary" style="text-decoration: none; float: right;">New</a>
+      <a href="{{ url_for('newtodolist') }}" class="btn btn-primary" style="text-decoration: none; float: right;">New</a>
     </div>
   </div>
   {% if todo and session %}
@@ -72,7 +72,7 @@ Home
     </div>
   </form>
   {% else %}
-    <h4>No Notes Found</h4>
+    <h4>No Todo List Found</h4>
   {% endif %}
 </div>
 
