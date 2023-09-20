@@ -23,10 +23,10 @@ def home():
         print(user_id)
         # Notes
         sql = """
-            SELECT id, title, content, user_id, datetime
+            SELECT id, title, content, user_id, date_time
             FROM notes
             WHERE user_id = %s
-            ORDER BY datetime
+            ORDER BY date_time
         """ % (user_id)
         cur.execute(sql)
         notes = cur.fetchall()
@@ -134,13 +134,13 @@ def newnotes():
     if request.method == 'POST' and 'title' in request.form and 'content' in request.form:
         title = request.form['title']
         content = request.form['content']
-        datetime = 'current_timestamp'
+        date_time = 'current_timestamp'
         user_id = session['user_id']
         
         sql = """
-            INSERT INTO notes (user_id, title, content, datetime) 
+            INSERT INTO notes (user_id, title, content, date_time) 
             VALUES (%s, '%s', '%s', %s) 
-            """ % (user_id, title, content, datetime)
+            """ % (user_id, title, content, date_time)
         cur.execute(sql)
         conn.commit()
         print(sql)
@@ -158,7 +158,7 @@ def viewnotes(notes_id):
     cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
     sql = """
-    SELECT id, title, content, user_id, datetime
+    SELECT id, title, content, user_id, date_time
     FROM notes
     WHERE id = %s
     """ % notes_id
@@ -178,14 +178,14 @@ def editnotes(notes_id):
     if request.method == 'POST' and 'title' in request.form and 'content' in request.form:
         title = request.form['title']
         content = request.form['content']
-        datetime = 'current_timestamp'
+        date_time = 'current_timestamp'
 
         title = title.strip()
         content = content.strip()
         
         sql = """
-            UPDATE notes SET title = '%s', content = '%s', datetime = %s
-            """ % (title, content, datetime)
+            UPDATE notes SET title = '%s', content = '%s', date_time = %s
+            """ % (title, content, date_time)
         cur.execute(sql)
         conn.commit()
         print(sql)
@@ -196,7 +196,7 @@ def editnotes(notes_id):
     conn = db_connection()
     cur = conn.cursor()
     sql = """
-    SELECT id, title, content, user_id, datetime
+    SELECT id, title, content, user_id, date_time
     FROM notes
     WHERE id = %s
     """ % notes_id
@@ -245,6 +245,7 @@ def newtodolist():
         return redirect(url_for('home')) 
         
     return render_template('newtodo.html')
+
 # Delete Todo list function
 @app.route('/deletetodo/<int:todo_id>', methods=['GET', 'POST'])
 def deletetodo(todo_id):
